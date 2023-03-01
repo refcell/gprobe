@@ -24,13 +24,25 @@ pub struct GProbe {
 /// GProbe Subcommands
 #[derive(Subcommand, Clone, Debug)]
 pub enum Subcommands {
-    /// tree subcommand
+    /// Traverse a database
     Tree {
         /// The depth of the tree
         #[clap(short = 'l', long = "level", default_value = "3")]
         level: u64,
 
         /// The path of the database
+        #[clap(short = 'p', long = "path")]
+        path: Option<String>,
+    },
+    /// Create a new database
+    Create {
+        /// The path of the database
+        #[clap(short = 'p', long = "path")]
+        path: Option<String>,
+    },
+    /// Decompress a Tarball
+    Decompress {
+        /// The path of the tarball
         #[clap(short = 'p', long = "path")]
         path: Option<String>,
     },

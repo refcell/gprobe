@@ -3,26 +3,20 @@ use std::path::Path;
 use rusty_leveldb::{DB, LdbIterator, Options};
 use spinners::Spinner;
 
-use crate::utils;
-
-/// Walks the tree in a depth-first manner, calling the given function on each node.
-pub fn walk(
+/// Creates a new database at the provided path
+pub fn create(
     path: impl AsRef<Path>,
-    level: u64,
     spinner: &mut Option<Spinner>
 ) {
-    let db_name = path.as_ref().to_string_lossy();
-    tracing::debug!("Walking db \"{}\" tree to a depth of {}", db_name, level);
-
-    // Cleanup the database directory
-    if let Err(e) = utils::cleanup_db_dir(&db_name) {
-        tracing::error!("Failed to cleanup database directory: {}", e);
-        return;
-    }
+    tracing::debug!("Creating db \"{}\"", path.as_ref().to_string_lossy());
 
     // Open the leveldb-rs database at the given path
-    let open_options = Options { create_if_missing: false, ..Default::default() };
+    let open_options = Options { create_if_missing: true, ..Default::default() };
     let mut db = DB::open(path.as_ref(), open_options).unwrap();
+
+    // Insert value and flush to disk
+    db.put(b"key", b"value").unwrap();
+    db.flush().unwrap();
 
     // Create a new db iterator
     let mut iter = match db.new_iter() {
@@ -46,11 +40,10 @@ pub fn walk(
     }
     iter.reset();
 
-    // Walk the database
+    // Walk entire db
     while let Some((k, v)) = iter.next() {
-        let key = format!("0x{}", hex::encode(&k));
-        let value = format!("0x{}", hex::encode(&v));
-        println!("Key: {}\nValue: {}\n", key, value);
+        let key = String::from_utf8_lossy(k.as_slice());
+        let value = String::from_utf8_lossy(v.as_slice());
+        println!("Key: {}, Value: {}", key, value);
     }
-    println!("Finished walking db \"{}\"", db_name);
 }

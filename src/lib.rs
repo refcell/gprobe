@@ -18,6 +18,9 @@
 /// Cli Args
 pub mod cli;
 
+/// Module wrapping database utilities
+pub mod db;
+
 /// Telemetry
 pub mod telemetry;
 
@@ -27,8 +30,15 @@ pub mod runner;
 /// The tree dispatch
 pub mod tree;
 
+/// The create dispatch
+pub mod create;
+
+/// Utilities
+pub mod utils;
+
 /// A group of handlers for the [crate::runner] module to dispatch
 pub mod handlers {
     /// The [crate::handlers::tree] handler
-    pub use super::tree;
+    pub use super::tree::*;
+    pub use super::create::*;
 }
