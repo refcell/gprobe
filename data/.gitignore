@@ -18,3 +18,7 @@
 *.swm
 *.swx
 *.swpx
+
+geth
+
+.DS_Store

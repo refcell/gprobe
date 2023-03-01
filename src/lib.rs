@@ -23,3 +23,12 @@ pub mod telemetry;
 
 /// The core [crate::cli::GProbe] runner
 pub mod runner;
+
+/// The tree dispatch
+pub mod tree;
+
+/// A group of handlers for the [crate::runner] module to dispatch
+pub mod handlers {
+    /// The [crate::handlers::tree] handler
+    pub use super::tree;
+}

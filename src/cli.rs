@@ -29,5 +29,9 @@ pub enum Subcommands {
         /// The depth of the tree
         #[clap(short = 'l', long = "level", default_value = "3")]
         level: u64,
+
+        /// The path of the database
+        #[clap(short = 'p', long = "path")]
+        path: Option<String>,
     },
 }

@@ -5,7 +5,6 @@ use spinners::{Spinner, Spinners};
 
 use crate::{cli::{GProbe, Subcommands}, telemetry};
 
-
 impl GProbe {
     /// Runs the core logic for the [gprobe::cli::GProbe] CLI Application
     pub fn run(&mut self) {
@@ -19,9 +18,13 @@ impl GProbe {
         telemetry::init_subscriber(subscriber);
 
         // Match on subcommand
-        match self.subcommand {
-            Some(Subcommands::Tree { level }) => {
-                self.tree(level);
+        match &self.subcommand {
+            Some(Subcommands::Tree { level, path }) => {
+                let p = match self.source {
+                    Some(_) => self.source.clone(),
+                    None => path.clone(),
+                };
+                self.tree(*level, p);
             },
             None => {
                 if app.print_help().is_err() {
@@ -32,12 +35,19 @@ impl GProbe {
     }
 
     /// Prints out a tree of the data source
-    pub fn tree(&mut self, level: u64) {
+    pub fn tree(&mut self, level: u64, path: Option<String>) {
         GProbe::spin("Probing...", || {
             tracing::debug!("Tracing a datastore tree with a depth of {}", level);
             thread::sleep(std::time::Duration::from_secs(2));
 
-            // TODO: print out the tree here
+            let path = match path {
+                Some(path) => path,
+                None => {
+                    tracing::warn!("No path provided for datastore tree");
+                    return;
+                }
+            };
+            crate::handlers::tree::walk(path, level);
 
             tracing::debug!("Done tracing datastore tree");
         });
