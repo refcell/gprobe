@@ -9,7 +9,7 @@ license = "MIT"
 description = """
 A verbose CLI to probe go-ethereum data structures.
 """
-keywords = ["geth", "rust", "evm", "bytecode", "data", "database"]
+keywords = ["rust", "evm", "data", "database", "ethereum"]
 
 [dependencies]
 clap = { version = "3.1.18", features = ["derive"] }
