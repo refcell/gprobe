@@ -38,7 +38,7 @@ pub mod utils;
 
 /// A group of handlers for the [crate::runner] module to dispatch
 pub mod handlers {
+    pub use super::create::*;
     /// The [crate::handlers::tree] handler
     pub use super::tree::*;
-    pub use super::create::*;
 }

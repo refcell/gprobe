@@ -1,4 +1,3 @@
-
 use clap::{Parser, Subcommand};
 
 /// GProbe Cli Args

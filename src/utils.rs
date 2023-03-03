@@ -1,5 +1,5 @@
-use std::{path::Path, fs};
 use eyre::Result;
+use std::{fs, path::Path};
 
 /// Clean up the database directory
 pub fn cleanup_db_dir(base: &str) -> Result<()> {
@@ -14,10 +14,7 @@ pub fn cleanup_db_dir(base: &str) -> Result<()> {
 /// Deletes obsolete files in a database directory.
 pub fn delete_obsolete_files(base: &str) -> Result<()> {
     let prefix_path = base.strip_suffix('/').unwrap_or(base);
-    let obsolete_files = vec![
-        ".DS_Store",
-        "CURRENT.bak",
-    ];
+    let obsolete_files = vec![".DS_Store", "CURRENT.bak"];
     for file in obsolete_files {
         let file_path = format!("{}/{}", prefix_path, file);
         let path = Path::new(&file_path);

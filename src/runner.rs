@@ -1,11 +1,14 @@
-use std::{thread, fs::File};
 use clap::CommandFactory;
+use flate2::read::GzDecoder;
 use isatty::stdout_isatty;
 use spinners::{Spinner, Spinners};
-use flate2::read::GzDecoder;
+use std::{fs::File, thread};
 use tar::Archive;
 
-use crate::{cli::{GProbe, Subcommands}, telemetry};
+use crate::{
+    cli::{GProbe, Subcommands},
+    telemetry,
+};
 
 impl GProbe {
     /// Runs the core logic for the [gprobe::cli::GProbe] CLI Application
@@ -30,14 +33,14 @@ impl GProbe {
                     None => path.clone(),
                 };
                 self.tree(*level, p);
-            },
+            }
             Some(Subcommands::Create { path }) => {
                 let p = match self.source {
                     Some(_) => self.source.clone(),
                     None => path.clone(),
                 };
                 self.create(p);
-            },
+            }
             Some(Subcommands::Decompress { path }) => {
                 let p = match self.source {
                     Some(_) => self.source.clone(),
@@ -49,7 +52,7 @@ impl GProbe {
                         println!("No path provided for tarball");
                     }
                 }
-            },
+            }
             None => {
                 if app.print_help().is_err() {
                     tracing::warn!("Failed to print help menu for gprobe command");
@@ -67,7 +70,7 @@ impl GProbe {
                 if let Err(e) = archive.unpack(".") {
                     tracing::error!("Failed to decompress tarball: {}", e);
                 }
-            },
+            }
             Err(e) => {
                 tracing::error!("Failed to open tarball: {}", e);
             }

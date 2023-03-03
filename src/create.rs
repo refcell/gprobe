@@ -1,17 +1,17 @@
 use std::path::Path;
 
-use rusty_leveldb::{DB, LdbIterator, Options};
+use rusty_leveldb::{LdbIterator, Options, DB};
 use spinners::Spinner;
 
 /// Creates a new database at the provided path
-pub fn create(
-    path: impl AsRef<Path>,
-    spinner: &mut Option<Spinner>
-) {
+pub fn create(path: impl AsRef<Path>, spinner: &mut Option<Spinner>) {
     tracing::debug!("Creating db \"{}\"", path.as_ref().to_string_lossy());
 
     // Open the leveldb-rs database at the given path
-    let open_options = Options { create_if_missing: true, ..Default::default() };
+    let open_options = Options {
+        create_if_missing: true,
+        ..Default::default()
+    };
     let mut db = DB::open(path.as_ref(), open_options).unwrap();
 
     // Insert value and flush to disk

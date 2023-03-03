@@ -1,16 +1,12 @@
 use std::path::Path;
 
-use rusty_leveldb::{DB, LdbIterator, Options};
+use rusty_leveldb::{LdbIterator, Options, DB};
 use spinners::Spinner;
 
 use crate::utils;
 
 /// Walks the tree in a depth-first manner, calling the given function on each node.
-pub fn walk(
-    path: impl AsRef<Path>,
-    level: u64,
-    spinner: &mut Option<Spinner>
-) {
+pub fn walk(path: impl AsRef<Path>, level: u64, spinner: &mut Option<Spinner>) {
     let db_name = path.as_ref().to_string_lossy();
     tracing::debug!("Walking db \"{}\" tree to a depth of {}", db_name, level);
 
@@ -21,7 +17,10 @@ pub fn walk(
     }
 
     // Open the leveldb-rs database at the given path
-    let open_options = Options { create_if_missing: false, ..Default::default() };
+    let open_options = Options {
+        create_if_missing: false,
+        ..Default::default()
+    };
     let mut db = DB::open(path.as_ref(), open_options).unwrap();
 
     // Create a new db iterator
